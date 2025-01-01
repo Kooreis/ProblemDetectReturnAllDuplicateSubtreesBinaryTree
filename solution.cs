@@ -1,13 +1,35 @@
-using System;
-using System.Collections.Generic;
-
-public class Node
+public class BinaryTree
 {
-    public int data;
-    public Node left, right;
-    public Node(int item)
+    Dictionary<string, int> subtrees = new Dictionary<string, int>();
+    List<Node> duplicates = new List<Node>();
+
+    public List<Node> FindDuplicateSubtrees(Node node)
     {
-        data = item;
-        left = right = null;
+        subtrees.Clear();
+        duplicates.Clear();
+        PostOrder(node);
+        return duplicates;
+    }
+
+    string PostOrder(Node node)
+    {
+        if (node == null)
+            return "";
+
+        string str = "(";
+        str += PostOrder(node.left);
+        str += node.data;
+        str += PostOrder(node.right);
+        str += ")";
+
+        if (subtrees.ContainsKey(str) && subtrees[str] == 1)
+            duplicates.Add(node);
+
+        if (!subtrees.ContainsKey(str))
+            subtrees[str] = 1;
+        else
+            subtrees[str]++;
+
+        return str;
     }
 }
